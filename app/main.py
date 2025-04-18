@@ -5,6 +5,7 @@ from utils.query_enhancer import enhance_query
 import streamlit as st
 from utils.recommender import recommend_assessments
 
+st.set_page_config(page_title="SHL Assessment Recommender", layout="centered")
 
 st.set_page_config(page_title="SHL Assessment Recommender", layout="centered")
 st.title("🧠 SHL Assessment Recommendation System")
