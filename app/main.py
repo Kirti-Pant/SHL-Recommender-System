@@ -14,7 +14,8 @@ if st.button("🔍 Get Recommendations"):
     else:
         try:
             # ✅ Replace with your actual deployed FastAPI endpoint
-            api_url = "https://your-fastapi-api.repl.co/recommend"
+            api_url = "https://shl-fastapi-efc6.onrender.com/recommend"
+
 
             # Send POST request to FastAPI backend
             response = requests.post(api_url, json={"query": query})
