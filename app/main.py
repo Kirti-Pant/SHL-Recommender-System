@@ -1,31 +1,40 @@
 import streamlit as st
-import sys, os
+import requests
+
 st.set_page_config(page_title="SHL Assessment Recommender", layout="centered")
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from utils.query_enhancer import enhance_query
-from utils.recommender import recommend_assessments
 
 st.title("🧠 SHL Assessment Recommendation System")
 st.write("Enter a job description or natural language query below to get suitable SHL assessments:")
+
 query = st.text_area("💬 Job Description or Query", height=200)
 
 if st.button("🔍 Get Recommendations"):
     if not query.strip():
         st.warning("Please enter a valid job description or query.")
     else:
-        enhanced_query = enhance_query(query)
-        st.info(f"🔎 Enhanced Query (Gemini): *{enhanced_query}*")
+        try:
+            # ✅ Replace with your actual deployed FastAPI endpoint
+            api_url = "https://your-fastapi-api.repl.co/recommend"
 
-        results = recommend_assessments(enhanced_query)
-        st.success(f"Found {len(results)} relevant assessments:")
+            # Send POST request to FastAPI backend
+            response = requests.post(api_url, json={"query": query})
 
-        for i, item in enumerate(results, 1):
-            st.markdown(f"""
-            ### 🔹 Recommendation {i}
-            - **Name:** [{item['name']}]({item['url']})
-            - **Type:** {item['test_type']}
-            - **Duration:** {item['duration']}
-            - **Remote Testing:** {item['remote_testing']}
-            - **Adaptive/IRT Support:** {item['adaptive_support']}
-            """)
+            if response.status_code == 200:
+                results = response.json()
+                st.success(f"Found {len(results)} relevant assessments:")
+
+                for i, item in enumerate(results, 1):
+                    st.markdown(f"""
+                    ### 🔹 Recommendation {i}
+                    - **Name:** [{item['name']}]({item['url']})
+                    - **Type:** {item['test_type']}
+                    - **Duration:** {item['duration']}
+                    - **Remote Testing:** {item['remote_testing']}
+                    - **Adaptive/IRT Support:** {item['adaptive_support']}
+                    """)
+            else:
+                st.error("Something went wrong with the API.")
+        except Exception as e:
+            st.error(f"Error contacting backend: {e}")
+
 

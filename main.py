@@ -13,3 +13,4 @@ async def recommend(input_data: QueryInput):
     enhanced_query = enhance_query(input_data.query)
     results = recommend_assessments(enhanced_query)
     return results
+
